@@ -25,13 +25,19 @@ exec Reports.GetProductsAndModels
 drop proc  Reports.GetProductsByColor
 create proc Reports.GetProductsByColor @Color nvarchar(20)
 as 
-select ProductID, Name, ListPrice as Price, Color, Size
-from SalesLT.Product
-where  Color=@Color
-if exists(select ProductID, Name, ListPrice as Price, Color, Size from SalesLT.Product where @Color is null)
-begin 
-   select ProductID, Name, ListPrice as Price, Color, Size from SalesLT.Product where Color is Null
-end
-order by SalesLT.Product.Name;
+ begin
+     if exists(select ProductID, Name, ListPrice as Price, Color, Size from SalesLT.Product where  Color=@Color )
+	 select ProductID, Name, ListPrice as Price, Color, Size
+     from SalesLT.Product
+     where  Color=@Color
+     order by SalesLT.Product.Name;
+	 if exists(select ProductID, Name, ListPrice as Price, Color, Size from SalesLT.Product where  @Color is null)
+	 select ProductID, Name, ListPrice as Price, Color, Size 
+	 from SalesLT.Product 
+	 where  Color is null
+ end
 
-exec Reports.GetProductsByColor
+
+exec Reports.GetProductsByColor @Color = 'Blue'
+exec Reports.GetProductsByColor  @Color=null
+
