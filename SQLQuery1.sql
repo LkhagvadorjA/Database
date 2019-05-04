@@ -1,0 +1,2 @@
+alter database AdventureWorksLT2008R2
+set allow_snapshot_isolation on
